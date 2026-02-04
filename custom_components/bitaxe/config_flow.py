@@ -1,7 +1,7 @@
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
-import ipaddress
+import ipaddress # Import für IP-Adressenvalidierung
 
 from .const import (
     DOMAIN, MIN_SCAN_INTERVAL, MAX_SCAN_INTERVAL, 
@@ -20,19 +20,20 @@ class BitAxeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             device_name = user_input["device_name"]
             scan_interval = user_input[CONF_SCAN_INTERVAL]
 
-            # Validate IP address
+            # Validierung der IP-Adresse
             try:
                 ipaddress.ip_address(ip_address)
             except ValueError:
-                errors["ip_address"] = "invalid_ip"
+                errors["ip_address"] = "Invalid IP address format."
                 return self.async_show_form(
                     step_id="user",
                     data_schema=self.get_data_schema(),
                     errors=errors,
                 )
 
-            await self.async_set_unique_id(ip_address)
-            self._abort_if_unique_id_configured()
+            # Entry mit IP-Adresse und Gerätenamen erstellen
+            await self.async_set_unique_id(ip_address)  # Einzigartige ID auf IP-Adresse setzen
+            self._abort_if_unique_id_configured()  # Sicherstellen, dass die IP-Adresse nicht doppelt hinzugefügt wird
 
             return self.async_create_entry(
                 title=device_name,
