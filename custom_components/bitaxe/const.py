@@ -1,6 +1,6 @@
 DOMAIN = "bitaxe"
 
-CONF_SCAN_INTERVAL = "scan_interval (s)"
+CONF_SCAN_INTERVAL = "Polling Rate (s)"
 
 DEFAULT_SCAN_INTERVAL = 60  # seconds
 MIN_SCAN_INTERVAL = 30

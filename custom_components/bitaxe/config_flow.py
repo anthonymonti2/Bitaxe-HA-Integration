@@ -51,21 +51,23 @@ class BitAxeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=self.get_data_schema(),
             errors=errors,
         )
+    
+    def validate_scan_interval(value):
+        value = int(value)
+        if value < MIN_SCAN_INTERVAL or value > MAX_SCAN_INTERVAL:
+            raise vol.Invalid("Polling rate must be between 5 and 3600 seconds")
+        return value
 
     def get_data_schema(self):
-        """Return the schema for user input."""
         return vol.Schema({
             vol.Required("ip_address"): str,
             vol.Required("device_name"): str,
             vol.Optional(
                 CONF_SCAN_INTERVAL,
                 default=DEFAULT_SCAN_INTERVAL,
-            ): vol.All(
-                vol.Coerce(int),
-                vol.Clamp(min=MIN_SCAN_INTERVAL, max=MAX_SCAN_INTERVAL),
-            ),
+            ): self.validate_scan_interval,
         })
-
+    
     @staticmethod
     @callback
     def async_get_options_flow(config_entry):
