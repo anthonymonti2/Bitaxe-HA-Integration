@@ -53,6 +53,7 @@ class BitAxeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     def get_data_schema(self):
+        """Return the schema for user input and check for validity."""
         return vol.Schema({
             vol.Required("ip_address"): str,
             vol.Required("device_name"): str,
@@ -73,6 +74,7 @@ class BitAxeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 class BitAxeOptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_init(self, user_input=None):
+        """Manage the options."""
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
 
